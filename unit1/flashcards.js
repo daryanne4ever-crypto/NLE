@@ -18,6 +18,15 @@ const cards = [
 
 const grid = document.getElementById('flashGrid');
 
+function playAudio(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.8;
+  utterance.pitch = 1.1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
 grid.innerHTML = cards
   .map((c, i) => `<article class="flash-card" data-i="${i}"><div class="flash-top"><strong>${c.en}</strong></div><p class="hidden-info muted">${c.pt}</p></article>`)
   .join('');
@@ -25,6 +34,8 @@ grid.innerHTML = cards
 grid.addEventListener('click', (e) => {
   const card = e.target.closest('.flash-card');
   if (!card) return;
+  const idx = Number(card.dataset.i || 0);
+  playAudio(cards[idx].en);
   card.querySelectorAll('.hidden-info').forEach((x) => {
     x.style.display = x.style.display === 'block' ? 'none' : 'block';
   });
