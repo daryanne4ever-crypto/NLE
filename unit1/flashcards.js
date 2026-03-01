@@ -2,19 +2,57 @@ const student = requireStudent();
 if (!student) throw new Error('No student');
 setLastRoute('unit1/flashcards.html', 'unit1');
 
-const cards = [
-  ['A', '/eɪ/'], ['B', '/biː/'], ['C', '/siː/'], ['G', '/dʒiː/'], ['H', '/eɪtʃ/'], ['W', '/ˈdʌbəl.juː/' ], ['Z', '/ziː/' ],
-  ['A (/æ/)', 'cat'], ['A (/eɪ/)', 'name'], ['E (/ɛ/)', 'bed'], ['E (/iː/)', 'she'], ['I (/ɪ/)', 'sit'], ['I (/aɪ/)', 'time'],
-  ['O (/ɒ/)', 'hot'], ['O (/oʊ/)', 'home'], ['U (/ʌ/)', 'cup'], ['U (/juː/)', 'student'], ['EE', '/iː/ (see, tree)'],
-  ['OO (Long)', '/uː/ (food, school)'], ['OO (Short)', '/ʊ/ (book, good)'], ['EA', '/iː/ (eat) ou /ɛ/ (bread)'],
-  ['Magic E (Cap vs Cape)', 'cap /kæp/ vs cape /keɪp/'], ['Vowels end of word (Me, She)', 'Som longo /iː/'],
-  ['1 (One)', '/wʌn/'], ['2 (Two)', '/tuː/'], ['3 (Three)', '/θriː/'], ['11 (Eleven)', '/ɪˈlevən/'], ['12 (Twelve)', '/tuélv/'],
-  ['13 (Thirteen)', '/ˌθɜːrˈtiːn/'], ['30 (Thirty)', '/ˈθɜːrti/'], ['14 (Fourteen)', '/ˌfɔːrˈtiːn/'], ['40 (Forty)', '/ˈfɔːrti/'],
-  ['100', 'one hundred'], ['1,000', 'one thousand (usa vírgula no inglês)'], ['@ (E-mail symbol)', 'at /æt/'], ['. (E-mail symbol)', 'dot /dɒt/'],
-  ['_ (E-mail symbol)', 'underscore /ˈʌndərskɔːr/'], ['- (E-mail symbol)', 'hyphen / dash'], ['Uppercase', 'Letra maiúscula'], ['Lowercase', 'Letra minúscula'],
-  ['Double Letter (Ex: AA)', 'Double A'], ['Red', '/red/ (R retroflexo)'], ['Blue', '/bluː/ (U longo)'], ['Yellow', '/ˈjel.oʊ/'], ['Orange', '/ˈɔːr.ɪndʒ/'],
-  ['Green', '/ɡriːn/'], ['Purple', '/ˈpɜːr.pəl/'], ['Out of the blue', 'Algo inesperado'], ['Feeling blue', 'Estar triste'], ['White lie', 'Mentira inocente']
-].map(([en, pt]) => ({ en, pt }));
+const sections = [
+  {
+    title: 'Alphabet',
+    items: [
+      ['A /eɪ/', 'A'], ['B /biː/', 'B'], ['C /siː/', 'C'], ['D /diː/', 'D'], ['E /iː/', 'E'], ['F /ef/', 'F'],
+      ['G /dʒiː/', 'G'], ['H /eɪtʃ/', 'H'], ['I /aɪ/', 'I'], ['J /dʒeɪ/', 'J'], ['K /keɪ/', 'K'], ['L /el/', 'L'],
+      ['M /em/', 'M'], ['N /en/', 'N'], ['O /əʊ/', 'O'], ['P /piː/', 'P'], ['Q /kjuː/', 'Q'], ['R /ɑːr/', 'R'],
+      ['S /es/', 'S'], ['T /tiː/', 'T'], ['U /juː/', 'U'], ['V /viː/', 'V'], ['W /ˈdʌbəljuː/', 'W'], ['X /eks/', 'X'],
+      ['Y /waɪ/', 'Y'], ['Z /ziː/', 'Z']
+    ]
+  },
+  {
+    title: 'Cardinal Numbers',
+    items: [
+      ['0 - zero /ˈzɪərəʊ/', 'zero'], ['1 - one /wʌn/', 'one'], ['2 - two /tuː/', 'two'], ['3 - three /θriː/', 'three'],
+      ['4 - four /fɔːr/', 'four'], ['5 - five /faɪv/', 'five'], ['6 - six /sɪks/', 'six'], ['7 - seven /ˈsevən/', 'seven'],
+      ['8 - eight /eɪt/', 'eight'], ['9 - nine /naɪn/', 'nine'], ['10 - ten /ten/', 'ten'], ['11 - eleven /ɪˈlevən/', 'eleven'],
+      ['12 - twelve /twelv/', 'twelve'], ['13 - thirteen /ˌθɜːrˈtiːn/', 'thirteen'], ['14 - fourteen /ˌfɔːrˈtiːn/', 'fourteen'],
+      ['15 - fifteen /ˌfɪfˈtiːn/', 'fifteen'], ['16 - sixteen /ˌsɪksˈtiːn/', 'sixteen'], ['17 - seventeen /ˌsevənˈtiːn/', 'seventeen'],
+      ['18 - eighteen /ˌeɪˈtiːn/', 'eighteen'], ['19 - nineteen /ˌnaɪnˈtiːn/', 'nineteen'], ['20 - twenty /ˈtwenti/', 'twenty'],
+      ['30 - thirty /ˈθɜːrti/', 'thirty'], ['40 - forty /ˈfɔːrti/', 'forty'], ['50 - fifty /ˈfɪfti/', 'fifty'],
+      ['60 - sixty /ˈsɪksti/', 'sixty'], ['70 - seventy /ˈsevənti/', 'seventy'], ['80 - eighty /ˈeɪti/', 'eighty'], ['90 - ninety /ˈnaɪnti/', 'ninety']
+    ]
+  },
+  {
+    title: 'Ordinal Numbers',
+    items: [
+      ['1st - first /fɜːrst/', 'first'], ['2nd - second /ˈsekənd/', 'second'], ['3rd - third /θɜːrd/', 'third'],
+      ['4th - fourth /fɔːrθ/', 'fourth'], ['5th - fifth /fɪfθ/', 'fifth'], ['6th - sixth /sɪksθ/', 'sixth'],
+      ['7th - seventh /ˈsevənθ/', 'seventh'], ['8th - eighth /eɪtθ/', 'eighth'], ['9th - ninth /naɪnθ/', 'ninth'], ['10th - tenth /tenθ/', 'tenth']
+    ]
+  },
+  {
+    title: 'Colors',
+    items: [
+      ['Red', 'red'], ['Blue', 'blue'], ['Green', 'green'], ['Yellow', 'yellow'], ['Black', 'black'],
+      ['White', 'white'], ['Orange', 'orange'], ['Purple', 'purple'], ['Pink', 'pink'], ['Brown', 'brown']
+    ]
+  },
+  {
+    title: 'Pronouns',
+    items: [
+      ['I', 'I'], ['You', 'you'], ['He', 'he'], ['She', 'she'], ['It', 'it'], ['We', 'we'], ['They', 'they'],
+      ['Me', 'me'], ['Him', 'him'], ['Her', 'her'], ['Us', 'us'], ['Them', 'them'],
+      ['My', 'my'], ['Your', 'your'], ['His', 'his'], ['Her', 'her'], ['Our', 'our'], ['Their', 'their'],
+      ['Mine', 'mine'], ['Yours', 'yours'], ['Ours', 'ours'], ['Theirs', 'theirs'],
+      ['Myself', 'myself'], ['Yourself', 'yourself'], ['Himself', 'himself'], ['Herself', 'herself'],
+      ['Itself', 'itself'], ['Ourselves', 'ourselves'], ['Themselves', 'themselves']
+    ]
+  }
+];
 
 const grid = document.getElementById('flashGrid');
 
@@ -27,17 +65,18 @@ function playAudio(text) {
   window.speechSynthesis.speak(utterance);
 }
 
-grid.innerHTML = cards
-  .map((c, i) => `<article class="flash-card" data-i="${i}"><div class="flash-top"><strong>${c.en}</strong></div><p class="hidden-info muted">${c.pt}</p></article>`)
+grid.innerHTML = sections
+  .map((section) => `
+    <h2>${section.title}</h2>
+    <div class="flash-grid">
+      ${section.items.map(([label, audio]) => `<div class="flash-item" data-audio="${audio.replace(/"/g, '&quot;')}">${label}</div>`).join('')}
+    </div>
+  `)
   .join('');
 
 grid.addEventListener('click', (e) => {
-  const card = e.target.closest('.flash-card');
-  if (!card) return;
-  const idx = Number(card.dataset.i || 0);
-  playAudio(cards[idx].en);
-  card.querySelectorAll('.hidden-info').forEach((x) => {
-    x.style.display = x.style.display === 'block' ? 'none' : 'block';
-  });
+  const item = e.target.closest('.flash-item');
+  if (!item) return;
+  playAudio(item.dataset.audio || item.textContent);
   addUnitXP('unit1', 1, 'Unit0 Flashcard');
 });
