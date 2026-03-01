@@ -1,1 +1,349 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Unit 1 Listening</title><link rel="stylesheet" href="../styles.css"></head><body><main class="container"><section class="card"><div class="actions" style="margin-bottom:12px;"><button class="btn btn-secondary" data-back-btn>⬅ Voltar</button></div><h1>Unit 1 – Listening (Introduce Yourself)</h1><p class="muted">Conteúdo exclusivo Unit 1.</p><p><strong>Frase:</strong> <span id="target">Where is the boarding gate for flight 302?</span></p><div class="actions"><button id="playBtn" class="btn btn-primary">Ouvir</button><button id="recBtn" class="btn btn-success">Gravar</button></div><p id="spoken" class="muted">Você falou: -</p><p id="feedback" class="feedback"></p></section></main><script src="../common.js"></script><script src="listening.js"></script><script>document.querySelectorAll("[data-back-btn]").forEach((b)=>b.addEventListener("click",()=>window.history.back()));</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unit 1 – Introduce Yourself | English Lab</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121a31;
+      --soft: #1e2950;
+      --text: #ecf0ff;
+      --muted: #a7b2d8;
+      --primary: #6f7dff;
+      --ok: #2ecc71;
+      --warn: #f1c40f;
+      --bad: #ff5d73;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; background: radial-gradient(1200px 800px at 20% -20%, #293466 0%, var(--bg) 45%); color: var(--text); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    .card { background: var(--card); border: 1px solid #2d3d75; border-radius: 18px; padding: 18px; margin-bottom: 14px; box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+    .top { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+    .btn { border: none; border-radius: 10px; padding: 10px 14px; font-weight: 700; cursor: pointer; color: white; background: #2d3d75; }
+    .btn.primary { background: var(--primary); }
+    .btn.good { background: var(--ok); color:#082315; }
+    .btn.warn { background: #d39e00; }
+    .btn.bad { background: var(--bad); }
+    .tabs { display:grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap:8px; margin-top:10px; }
+    .tab { background: var(--soft); border: 1px solid #33457f; color: var(--text); }
+    .tab.active { background: var(--primary); }
+    .panel { display:none; }
+    .panel.active { display:block; }
+    h1,h2,h3 { margin: 6px 0 10px; }
+    .muted { color: var(--muted); }
+    .progress { width:100%; height:10px; border-radius:999px; background:#25315e; overflow:hidden; margin-top:8px; }
+    .bar { height:100%; width:0; background: linear-gradient(90deg,#6f7dff,#62d3ff); transition: .25s; }
+    .q { font-size: 1.2rem; font-weight: 700; margin: 10px 0; }
+    .answers { display:grid; gap:8px; }
+    .answers .btn { text-align:left; background:#273565; }
+    .feedback { min-height: 24px; font-weight: 700; margin-top:8px; }
+    .feedback.good { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
+    .feedback.warn { color: var(--warn); }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; }
+    .chip { background:#273565; border:1px solid #3b4f8e; border-radius:999px; padding:8px 12px; cursor:pointer; }
+    .rolebox, .listenbox { background:#0f1730; border:1px solid #2d3d75; border-radius:12px; padding:12px; margin-top:8px; }
+    .word { display:inline-block; margin:4px; padding:6px 9px; border-radius:8px; background:#273565; cursor:pointer; }
+    .grid2 { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:10px; }
+    input { width:100%; border-radius:10px; border:1px solid #3b4f8e; background:#0f1730; color:white; padding:10px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <button class="btn" onclick="window.history.back()">⬅ Voltar</button>
+        <button class="btn" onclick="window.location.href='../dashboard.html'">Dashboard</button>
+        <div class="muted" id="score">XP Total Unit 1: 0 | Nível: Easy</div>
+      </div>
+      <h1>Unit 1 – Introduce Yourself</h1>
+      <div class="progress"><div id="globalBar" class="bar"></div></div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+
+    <div class="card panel active" data-panel="quizVocab">
+      <h2>Quiz 1 – What does the word mean?</h2>
+      <p class="muted" id="qvMeta"></p>
+      <div class="q" id="qvQuestion"></div>
+      <div class="answers" id="qvAnswers"></div>
+      <div class="feedback" id="qvFeedback"></div>
+      <button class="btn primary" id="qvNext">Próxima</button>
+    </div>
+
+    <div class="card panel" data-panel="quizTrans">
+      <h2>Quiz 2 – Translate the sentence</h2>
+      <p class="muted" id="qtMeta"></p>
+      <div class="q" id="qtQuestion"></div>
+      <div class="answers" id="qtAnswers"></div>
+      <div class="feedback" id="qtFeedback"></div>
+      <button class="btn primary" id="qtNext">Próxima</button>
+    </div>
+
+    <div class="card panel" data-panel="interactiveText">
+      <h2>Interactive Text + Pronunciation</h2>
+      <p class="muted">Clique na palavra para ouvir e ver tradução.</p>
+      <div id="wordArea"></div>
+      <div class="rolebox" id="wordTranslation">Tradução: -</div>
+    </div>
+
+    <div class="card panel" data-panel="roleplay">
+      <h2>Roleplay 1.2.1 – Interview Simulation</h2>
+      <p class="muted" id="roleMeta"></p>
+      <div class="q" id="roleQuestion"></div>
+      <div class="rolebox">
+        <button class="btn primary" id="roleListen">🔊 Ouvir pergunta</button>
+        <button class="btn good" id="roleRecord">🎤 Gravar resposta</button>
+        <button class="btn" id="roleNext">Próxima pergunta</button>
+      </div>
+      <div class="feedback" id="roleFeedback"></div>
+      <div class="rolebox" id="roleTranscript">Sua resposta: -</div>
+    </div>
+
+    <div class="card panel" data-panel="ing">
+      <h2>Atividades com -ING</h2>
+      <div class="grid2">
+        <div>
+          <h3>Complete</h3>
+          <p class="muted">Digite o verbo com -ing.</p>
+          <div class="chips" id="ingTasks"></div>
+          <input id="ingInput" placeholder="Ex: watching" />
+          <button class="btn primary" id="ingCheck">Corrigir</button>
+          <div class="feedback" id="ingFeedback"></div>
+        </div>
+        <div>
+          <h3>Transform</h3>
+          <div class="chips" id="ingTransform"></div>
+          <div class="muted">Resposta esperada aparece após clicar.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card panel" data-panel="listening">
+      <h2>Listening – Ouvir e Reproduzir</h2>
+      <div class="chips" id="listenLevels"></div>
+      <p class="muted" id="listenMeta"></p>
+      <div class="q" id="listenPhrase"></div>
+      <div class="listenbox">
+        <button class="btn primary" id="listenPlay">🔊 Ouvir</button>
+        <button class="btn good" id="listenRecord">🎤 Gravar</button>
+        <button class="btn" id="listenNext">Próxima</button>
+      </div>
+      <div class="feedback" id="listenFeedback"></div>
+      <div class="rolebox" id="listenTranscript">Você falou: -</div>
+    </div>
+  </div>
+
+  <script src="../common.js"></script>
+  <script>
+    const student = requireStudent('../index.html');
+    if (!student) throw new Error('No student');
+    setLastRoute('unit2/listening.html', 'unit2');
+
+    const state = { xp: 0, answered: 0, total: 20 + 20 + 30 + 10 + 90, roleRec:false, listenRec:false, panel:'quizVocab' };
+
+    const panels = [
+      { id: 'quizVocab', label: 'Quiz Vocab' },
+      { id: 'quizTrans', label: 'Quiz Tradução' },
+      { id: 'interactiveText', label: 'Texto Interativo' },
+      { id: 'roleplay', label: 'Roleplay' },
+      { id: 'ing', label: '-ING' },
+      { id: 'listening', label: 'Listening' }
+    ];
+
+    const tabs = document.getElementById('tabs');
+    tabs.innerHTML = panels.map(p => `<button class="btn tab ${p.id===state.panel?'active':''}" data-tab="${p.id}">${p.label}</button>`).join('');
+    tabs.addEventListener('click', e => {
+      const b = e.target.closest('[data-tab]'); if(!b) return;
+      state.panel = b.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      b.classList.add('active');
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      document.querySelector(`[data-panel="${state.panel}"]`).classList.add('active');
+    });
+
+    function levelByXP(){ if(state.xp>=180) return 'Hard'; if(state.xp>=80) return 'Medium'; return 'Easy'; }
+    function renderScore(){
+      document.getElementById('score').textContent = `XP Total Unit 1: ${state.xp} | Nível: ${levelByXP()}`;
+      document.getElementById('globalBar').style.width = `${Math.min(100, Math.round((state.answered/state.total)*100))}%`;
+    }
+    function addXP(level, why){
+      const map = { easy:1, medium:2, hard:3 };
+      const gain = map[level] || 1;
+      state.xp += gain;
+      state.answered += 1;
+      addUnitXP('unit2', gain, why);
+      renderScore();
+      return gain;
+    }
+    function speak(text){
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.9;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }
+
+    // Quiz 1
+    const vocab = [
+      ['Dedicated',['Cansado','Dedicado','Nervoso'],1],['Busy',['Ocupado','Livre','Rico'],0],['Improve',['Piorar','Melhorar','Esquecer'],1],['Profession',['Profissão','Promessa','Promoção'],0],['Organized',['Desorganizado','Organizado','Confuso'],1],['Exchange program',['Programa de férias','Programa de intercâmbio','Programa escolar'],1],['Grow',['Crescer','Cair','Esperar'],0],['Free time',['Tempo preso','Tempo livre','Tempo perdido'],1],['Responsible',['Responsável','Irritado','Distraído'],0],['Goals',['Problemas','Metas','Dúvidas'],1],
+      ['Communicative',['Comunicativo','Calado','Tímido'],0],['Confident',['Confiante','Com medo','Desanimado'],0],['Routine',['Rotina','Ruína','Reunião'],0],['Study',['Estudar','Parar','Dormir'],0],['Learn',['Aprender','Esquecer','Perder'],0],['Apply',['Aplicar','Apagar','Afastar'],0],['Travel',['Viajar','Trabalhar','Morar'],0],['Interview',['Entrevista','Intervalo','Interação'],0],['Future',['Futuro','Passado','Presente'],0],['Past',['Passado','Futuro','Plano'],0]
+    ];
+    let qv = 0;
+    function renderQv(){
+      const [word, options] = vocab[qv];
+      qvMeta.textContent = `${qv+1}/20`;
+      qvQuestion.innerHTML = `${word} <button class='btn' onclick='speak("${word}")'>🔊</button>`;
+      qvAnswers.innerHTML = options.map((o,i)=>`<button class='btn' data-i='${i}'>${String.fromCharCode(97+i)}) ${o}</button>`).join('');
+      qvFeedback.textContent = '';
+    }
+    qvAnswers.addEventListener('click', e=>{
+      const b=e.target.closest('[data-i]'); if(!b) return;
+      const i=Number(b.dataset.i), [,options,correct]=vocab[qv];
+      if(i===correct){ const gain=addXP(levelByXP().toLowerCase(),`Unit1 Vocab ${qv+1}`); qvFeedback.textContent=`✅ Correto! +${gain} XP`; qvFeedback.className='feedback good'; }
+      else { qvFeedback.textContent=`❌ Incorreto. Resposta: ${options[correct]}`; qvFeedback.className='feedback bad'; }
+    });
+    qvNext.onclick=()=>{ qv=(qv+1)%vocab.length; renderQv(); };
+
+    // Quiz 2
+    const trans = [
+      ['I work during the day.',['Eu trabalho à noite.','Eu trabalho durante o dia.','Eu estudo de dia.'],1],
+      ['I study at night.',['Eu estudo à noite.','Eu estudo de manhã.','Eu trabalho à noite.'],0],
+      ['My routine is busy.',['Minha rotina é tranquila.','Minha rotina é ocupada.','Minha rotina é fácil.'],1],
+      ['I want to improve my English.',['Eu quero esquecer meu inglês.','Eu quero melhorar meu inglês.','Eu gosto do meu inglês.'],1],
+      ['I am a teacher.',['Eu sou professora.','Eu sou estudante.','Eu sou médica.'],0],
+      ['I live in Brazil.',['Eu moro no Brasil.','Eu viajo no Brasil.','Eu trabalho no Brasil.'],0],
+      ['I am organized and dedicated.',['Sou organizada e dedicada.','Sou cansada e confusa.','Sou distraída e nervosa.'],0],
+      ['I like learning new things.',['Eu gosto de aprender coisas novas.','Eu esqueço coisas novas.','Eu não gosto de estudar.'],0],
+      ['I work with children.',['Eu trabalho com crianças.','Eu estudo com crianças.','Eu moro com crianças.'],0],
+      ['I am going to travel next year.',['Eu vou viajar no próximo ano.','Eu viajei no ano passado.','Eu não vou viajar.'],0],
+      ['I will study harder.',['Eu vou estudar mais.','Eu parei de estudar.','Eu estudo menos.'],0],
+      ['She studied English last year.',['Ela estudou inglês no ano passado.','Ela estuda amanhã.','Ela trabalha com inglês.'],0],
+      ['He works in education.',['Ele trabalha na educação.','Ele estuda educação.','Ele mora na escola.'],0],
+      ['We are confident.',['Nós somos confiantes.','Nós somos tristes.','Nós somos cansados.'],0],
+      ['I am responsible.',['Eu sou responsável.','Eu sou distraído.','Eu sou desorganizado.'],0],
+      ['I have free time on weekends.',['Tenho tempo livre nos fins de semana.','Trabalho todo fim de semana.','Não tenho tempo livre.'],0],
+      ['My goals are clear.',['Minhas metas são claras.','Minhas metas são difíceis.','Minhas metas acabaram.'],0],
+      ['I work in the morning.',['Eu trabalho de manhã.','Eu trabalho à noite.','Eu trabalho no domingo.'],0],
+      ['They are communicative.',['Eles são comunicativos.','Eles são quietos.','Eles são atrasados.'],0],
+      ['I want a better future.',['Eu quero um futuro melhor.','Eu quero o passado.','Eu não quero estudar.'],0]
+    ];
+    let qt=0;
+    function renderQt(){
+      const [sentence, options]=trans[qt];
+      qtMeta.textContent = `${qt+1}/20`;
+      qtQuestion.innerHTML = `${sentence} <button class='btn' onclick='speak("${sentence}")'>🔊</button>`;
+      qtAnswers.innerHTML = options.map((o,i)=>`<button class='btn' data-i='${i}'>${String.fromCharCode(97+i)}) ${o}</button>`).join('');
+      qtFeedback.textContent='';
+    }
+    qtAnswers.addEventListener('click',e=>{
+      const b=e.target.closest('[data-i]'); if(!b) return;
+      const i=Number(b.dataset.i), [,options,correct]=trans[qt];
+      if(i===correct){ const gain=addXP(levelByXP().toLowerCase(),`Unit1 Translation ${qt+1}`); qtFeedback.textContent=`✅ Correto! +${gain} XP`; qtFeedback.className='feedback good'; }
+      else { qtFeedback.textContent=`❌ Incorreto. Resposta: ${options[correct]}`; qtFeedback.className='feedback bad'; }
+    });
+    qtNext.onclick=()=>{ qt=(qt+1)%trans.length; renderQt(); };
+
+    // Interactive text
+    const words = [
+      ['introduce','apresentar'],['live','morar'],['teacher','professor(a)'],['children','crianças'],['teenagers','adolescentes'],
+      ['study','estudar'],['busy','ocupado'],['married','casado'],['family','família'],['free time','tempo livre'],
+      ['dedicated','dedicado'],['organized','organizado'],['improve','melhorar'],['exchange program','programa de intercâmbio'],
+      ['culture','cultura'],['professional','profissional']
+    ];
+    wordArea.innerHTML = words.map(([w,pt])=>`<span class='word' data-w='${w}' data-pt='${pt}'>${w}</span>`).join(' ');
+    wordArea.addEventListener('click',e=>{
+      const w=e.target.closest('.word'); if(!w) return;
+      speak(w.dataset.w);
+      wordTranslation.textContent = `Tradução: ${w.dataset.pt}`;
+      const gain = addXP('easy', `Unit1 Interactive ${w.dataset.w}`);
+      wordTranslation.textContent += ` | +${gain} XP`;
+    });
+
+    // Roleplay
+    const roleQuestions = [
+      'What is your name?','Where are you from?','Where do you live?','What do you do?','What is your profession?','Do you work or study?','Do you work during the day or at night?','What is your routine like?','Is your routine busy?','Are you married?','Do you have children?','Who do you live with?','What do you do in your free time?','Do you like listening to music?','Do you like watching movies?','Why do you study English?','What is your goal with English?','Are you organized?','Are you dedicated?','Are you communicative?','What are your strengths?','What did you study in the past?','Where did you work before?','What did you learn last year?','Are you going to travel next year?','What are you going to improve?','Will you continue studying English?','Where do you see yourself in five years?','What are your professional goals?','Why should we choose you for the program?'
+    ];
+    let roleIdx=0;
+    function renderRole(){ roleMeta.textContent=`${roleIdx+1}/30`; roleQuestion.textContent=roleQuestions[roleIdx]; roleFeedback.textContent=''; roleTranscript.textContent='Sua resposta: -'; }
+    roleListen.onclick=()=>speak(roleQuestions[roleIdx]);
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    const roleRec = SR?new SR():null;
+    if(roleRec){
+      roleRec.lang='en-US'; roleRec.interimResults=true; roleRec.maxAlternatives=1;
+      roleRec.onstart=()=>{ state.roleRec=true; roleRecord.textContent='⏹ Parar gravação'; roleFeedback.textContent='Gravando resposta...'; roleFeedback.className='feedback warn'; };
+      roleRec.onend=()=>{ state.roleRec=false; roleRecord.textContent='🎤 Gravar resposta'; };
+      roleRec.onresult=(ev)=>{ const txt=ev.results?.[0]?.[0]?.transcript||''; roleTranscript.textContent=`Sua resposta: ${txt}`; const gain=addXP('medium',`Unit1 Roleplay ${roleIdx+1}`); roleFeedback.textContent=`✅ Resposta registrada (+${gain} XP)`; roleFeedback.className='feedback good'; };
+    }
+    roleRecord.onclick=()=>{
+      if(!roleRec){ roleFeedback.textContent='SpeechRecognition indisponível.'; roleFeedback.className='feedback bad'; return; }
+      try{ if(state.roleRec) roleRec.stop(); else roleRec.start(); }catch{}
+    };
+    roleNext.onclick=()=>{ roleIdx=(roleIdx+1)%roleQuestions.length; renderRole(); };
+
+    // -ING
+    const ingItems=[['I like ______ movies.','watching'],['She loves ______ books.','reading'],['They enjoy ______.','traveling'],['I like ______ English.','studying'],['He enjoys ______ video games.','playing'],['We love ______ new things.','learning'],['She likes ______.','cooking'],['They enjoy ______.','exercising'],['I like ______ to music.','listening'],['He loves ______ to the gym.','going']];
+    let ingIdx=0;
+    function renderIng(){ ingTasks.innerHTML=`<span class='chip'>${ingIdx+1}/10</span><span class='chip'>${ingItems[ingIdx][0]}</span>`; ingInput.value=''; ingFeedback.textContent=''; }
+    ingCheck.onclick=()=>{
+      const ans=ingInput.value.trim().toLowerCase(); const exp=ingItems[ingIdx][1];
+      if(ans===exp){ const gain=addXP('easy',`Unit1 ING ${ingIdx+1}`); ingFeedback.textContent=`✅ Correto! +${gain} XP`; ingFeedback.className='feedback good'; }
+      else { ingFeedback.textContent=`❌ Esperado: ${exp}`; ingFeedback.className='feedback bad'; }
+      ingIdx=(ingIdx+1)%ingItems.length; setTimeout(renderIng,700);
+    };
+    const transform=[['I watch movies.','I like watching movies.'],['She reads books.','She loves reading books.'],['They travel.','They enjoy traveling.']];
+    ingTransform.innerHTML=transform.map(([a,b])=>`<span class='chip' title='Clique para ver'>${a}</span>`).join('');
+    [...ingTransform.children].forEach((el,i)=>el.onclick=()=>{el.textContent=transform[i][1]; addXP('easy',`Unit1 ING Transform ${i+1}`);});
+
+    // Listening
+    const easy=[
+      'I am a student.','I work during the day.','I study at night.','I live in Brazil.','I like music.','I like watching movies.','I am organized.','I am dedicated.','I am friendly.','I have long hair.','I wear glasses.','I am tall.','I am calm.','I am confident.','I work as a teacher.','I work in education.','I study English.','I like learning.','I am motivated.','I am responsible.','I play soccer.','I read books.','I drink coffee.','I like my job.','I help my family.','I wake up early.','I have two children.','I like my routine.','I use my laptop.','I go to class.'
+    ];
+    const medium=[
+      'I work with children and teenagers.','My routine is busy but I like it.','I study English because I want to grow.','I am going to travel next year.','I will study harder.','I worked last year.','I studied English in 2024.','She works in a hospital.','He is a manager.','I live with my family.','I wake up early and work all day.','I usually study at night.','I like learning with my classmates.','My teacher speaks clearly.','I practiced English yesterday.','I will improve my pronunciation.','I am preparing for an interview.','My goals are very clear now.','I am focused on my future.','I am confident in class.','We work together every day.','They studied for the test.','I am going to apply soon.','I will continue this course.','He worked in education before.','She is dedicated and organized.','I am learning fast this month.','I travel for work sometimes.','I write notes in English.','I read short texts daily.'
+    ];
+    const hard=[
+      'I have been working in education for five years.','Before this, I worked at another school.','I learned English because I wanted new opportunities.','In five years, I see myself as a professional leader.','I am going to apply for the exchange program.','I will continue improving my English skills.','I studied hard, but it was worth it.','I am responsible for organizing schedules and meetings.','I want to grow professionally and personally.','This experience will change my life.','Although my routine is busy, I keep studying every day.','I have improved a lot since last year.','I will apply what I learned in real situations.','If I practice daily, I become more confident.','She had never traveled before this program.','He went to an interview and got the job.','We are building strong communication skills.','They were dedicated throughout the project.','I am going to focus on fluency and vocabulary.','My long-term goal is to work abroad.','Even when I am tired, I keep practicing.','I took notes so I would not forget.','I have already finished my assignment.','I used to be shy, but now I am communicative.','I will support my team during the presentation.','I have learned to speak more naturally.','The program helped me expand my worldview.','I was nervous, yet I delivered a good interview.','I will keep improving step by step.','I am preparing for future professional challenges.'
+    ];
+    const listenPools={easy,medium,hard};
+    let listenLevel='easy', listenIdx=0;
+    function renderListenLevels(){ listenLevels.innerHTML=['easy','medium','hard'].map(l=>`<button class='btn ${l===listenLevel?'primary':''}' data-l='${l}'>${l.toUpperCase()}</button>`).join(''); }
+    function renderListen(){
+      const arr=listenPools[listenLevel];
+      listenMeta.textContent=`${listenLevel.toUpperCase()} ${listenIdx+1}/${arr.length}`;
+      listenPhrase.textContent=arr[listenIdx];
+      listenFeedback.textContent='';
+      listenTranscript.textContent='Você falou: -';
+    }
+    listenLevels.addEventListener('click',e=>{ const b=e.target.closest('[data-l]'); if(!b) return; listenLevel=b.dataset.l; listenIdx=0; renderListenLevels(); renderListen(); });
+    listenPlay.onclick=()=>speak(listenPools[listenLevel][listenIdx]);
+    const lrec = SR?new SR():null;
+    if(lrec){
+      lrec.lang='en-US'; lrec.interimResults=true; lrec.maxAlternatives=1;
+      lrec.onstart=()=>{ state.listenRec=true; listenRecord.textContent='⏹ Parar'; listenFeedback.textContent='Gravando...'; listenFeedback.className='feedback warn'; };
+      lrec.onend=()=>{ state.listenRec=false; listenRecord.textContent='🎤 Gravar'; };
+      lrec.onresult=(ev)=>{
+        const spoken = ev.results?.[0]?.[0]?.transcript || '';
+        const target = listenPools[listenLevel][listenIdx];
+        listenTranscript.textContent = `Você falou: ${spoken}`;
+        const s=spoken.toLowerCase().replace(/[^a-z\s]/g,'').trim();
+        const t=target.toLowerCase().replace(/[^a-z\s]/g,'').trim();
+        const match = t.split(' ').filter(w=>s.split(' ').includes(w)).length;
+        const pct = Math.round((match / Math.max(1,t.split(' ').length))*100);
+        if(pct>=80){ const gain=addXP('hard',`Unit1 Listening ${listenLevel} ${listenIdx+1}`); listenFeedback.textContent=`✅ Excelente ${pct}% (+${gain} XP)`; listenFeedback.className='feedback good'; }
+        else if(pct>=60){ const gain=addXP('medium',`Unit1 Listening ${listenLevel} ${listenIdx+1}`); listenFeedback.textContent=`👍 Bom ${pct}% (+${gain} XP)`; listenFeedback.className='feedback warn'; }
+        else { const gain=addXP('easy',`Unit1 Listening ${listenLevel} ${listenIdx+1}`); listenFeedback.textContent=`🔁 Continue praticando ${pct}% (+${gain} XP)`; listenFeedback.className='feedback bad'; }
+      };
+    }
+    listenRecord.onclick=()=>{
+      if(!lrec){ listenFeedback.textContent='SpeechRecognition indisponível.'; listenFeedback.className='feedback bad'; return; }
+      try{ if(state.listenRec) lrec.stop(); else lrec.start(); }catch{}
+    };
+    listenNext.onclick=()=>{ const arr=listenPools[listenLevel]; listenIdx=(listenIdx+1)%arr.length; renderListen(); };
+
+    // init
+    renderScore(); renderQv(); renderQt(); renderRole(); renderIng(); renderListenLevels(); renderListen();
+  </script>
+</body>
+</html>
