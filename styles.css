@@ -1,0 +1,40 @@
+:root {
+  --primary: #4b0082;
+  --primary-dark: #8a2be2;
+  --bg: #000;
+  --card: #111;
+  --text: #fff;
+  --muted: #c4b5fd;
+  --success: #2ecc71;
+  --danger: #ff3333;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--text); }
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+.card { background: var(--card); border: 2px solid var(--primary); border-radius: 16px; padding: 24px; box-shadow: 0 10px 20px rgba(0,0,0,.35); }
+.muted { color: var(--muted); }
+.grid { display:grid; gap:14px; }
+.grid.stats { grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); }
+.stat { border:1px solid #4c1d95; border-radius:12px; padding:12px; background:#0b0b0b; }
+.stat .label { color:var(--muted); font-size:.85rem; }
+.stat .value { font-size:1.25rem; font-weight:800; }
+input, select { width:100%; padding:11px 12px; border-radius:10px; border:1px solid #6d28d9; background:#080808; color:#fff; font-size:1rem; }
+.field { margin-bottom:12px; }
+.btn { border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; transition:.15s; text-decoration:none; display:inline-block; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-secondary { background:#27272a; color:#fff; }
+.btn-success { background:var(--success); color:#062814; }
+.btn-danger { background:var(--danger); color:#fff; }
+.actions { display:flex; gap:10px; flex-wrap:wrap; }
+.progress { width:100%; height:10px; border-radius:999px; background:#27272a; overflow:hidden; }
+.progress > div { height:100%; width:0; background:var(--primary-dark); }
+.feedback { font-weight:700; min-height:20px; }
+.feedback.good{color:var(--success);} .feedback.bad{color:var(--danger);}
+ul.clean { list-style:none; padding:0; margin:0; }
+ul.clean li { padding:8px 0; border-bottom:1px solid #27272a; }
+.flash-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+.flash-card { border:1px solid #6d28d9; border-radius:12px; padding:10px; background:#070707; cursor:pointer; }
+.flash-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.sound-btn { border:none; background:#4c1d95; color:#fff; border-radius:8px; padding:4px 7px; cursor:pointer; }
+.hidden-info{display:none; margin-top:6px;}
