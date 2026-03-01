@@ -1,6 +1,32 @@
-const student = requireStudent(); if (!student) throw new Error('No student');
-setLastRoute('unit1/flashcards.html','unit1');
-const cards=[{en:'I',pt:'eu'},{en:'Happy',pt:'feliz'}];
-const g=document.getElementById('flashGrid');
-g.innerHTML=cards.map(c=>`<article class="flash-card"><div class="flash-top"><strong>${c.en}</strong></div><p class="hidden-info muted">${c.pt}</p></article>`).join('');
-g.addEventListener('click',e=>{const c=e.target.closest('.flash-card');if(!c)return;c.querySelector('.hidden-info').style.display='block';addUnitXP('unit1',2,'Unit0 Flashcard');});
+const student = requireStudent();
+if (!student) throw new Error('No student');
+setLastRoute('unit1/flashcards.html', 'unit1');
+
+const cards = [
+  ['A', '/eɪ/'], ['B', '/biː/'], ['C', '/siː/'], ['G', '/dʒiː/'], ['H', '/eɪtʃ/'], ['W', '/ˈdʌbəl.juː/' ], ['Z', '/ziː/' ],
+  ['A (/æ/)', 'cat'], ['A (/eɪ/)', 'name'], ['E (/ɛ/)', 'bed'], ['E (/iː/)', 'she'], ['I (/ɪ/)', 'sit'], ['I (/aɪ/)', 'time'],
+  ['O (/ɒ/)', 'hot'], ['O (/oʊ/)', 'home'], ['U (/ʌ/)', 'cup'], ['U (/juː/)', 'student'], ['EE', '/iː/ (see, tree)'],
+  ['OO (Long)', '/uː/ (food, school)'], ['OO (Short)', '/ʊ/ (book, good)'], ['EA', '/iː/ (eat) ou /ɛ/ (bread)'],
+  ['Magic E (Cap vs Cape)', 'cap /kæp/ vs cape /keɪp/'], ['Vowels end of word (Me, She)', 'Som longo /iː/'],
+  ['1 (One)', '/wʌn/'], ['2 (Two)', '/tuː/'], ['3 (Three)', '/θriː/'], ['11 (Eleven)', '/ɪˈlevən/'], ['12 (Twelve)', '/tuélv/'],
+  ['13 (Thirteen)', '/ˌθɜːrˈtiːn/'], ['30 (Thirty)', '/ˈθɜːrti/'], ['14 (Fourteen)', '/ˌfɔːrˈtiːn/'], ['40 (Forty)', '/ˈfɔːrti/'],
+  ['100', 'one hundred'], ['1,000', 'one thousand (usa vírgula no inglês)'], ['@ (E-mail symbol)', 'at /æt/'], ['. (E-mail symbol)', 'dot /dɒt/'],
+  ['_ (E-mail symbol)', 'underscore /ˈʌndərskɔːr/'], ['- (E-mail symbol)', 'hyphen / dash'], ['Uppercase', 'Letra maiúscula'], ['Lowercase', 'Letra minúscula'],
+  ['Double Letter (Ex: AA)', 'Double A'], ['Red', '/red/ (R retroflexo)'], ['Blue', '/bluː/ (U longo)'], ['Yellow', '/ˈjel.oʊ/'], ['Orange', '/ˈɔːr.ɪndʒ/'],
+  ['Green', '/ɡriːn/'], ['Purple', '/ˈpɜːr.pəl/'], ['Out of the blue', 'Algo inesperado'], ['Feeling blue', 'Estar triste'], ['White lie', 'Mentira inocente']
+].map(([en, pt]) => ({ en, pt }));
+
+const grid = document.getElementById('flashGrid');
+
+grid.innerHTML = cards
+  .map((c, i) => `<article class="flash-card" data-i="${i}"><div class="flash-top"><strong>${c.en}</strong></div><p class="hidden-info muted">${c.pt}</p></article>`)
+  .join('');
+
+grid.addEventListener('click', (e) => {
+  const card = e.target.closest('.flash-card');
+  if (!card) return;
+  card.querySelectorAll('.hidden-info').forEach((x) => {
+    x.style.display = x.style.display === 'block' ? 'none' : 'block';
+  });
+  addUnitXP('unit1', 1, 'Unit0 Flashcard');
+});

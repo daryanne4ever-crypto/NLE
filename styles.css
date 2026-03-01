@@ -38,3 +38,5 @@ ul.clean li { padding:8px 0; border-bottom:1px solid #27272a; }
 .flash-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
 .sound-btn { border:none; background:#4c1d95; color:#fff; border-radius:8px; padding:4px 7px; cursor:pointer; }
 .hidden-info{display:none; margin-top:6px;}
+
+.recording { background: var(--danger) !important; }
