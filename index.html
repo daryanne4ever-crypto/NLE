@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | English Lab</title>
+</head>
+<body>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #3a0b66 0%, #160522 45%, #000000 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
+
+    .login-box {
+      background: #111111;
+      border: 1px solid #6a0dad;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      width: 320px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #9b59ff;
+      background: #0b0b0b;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .login { background: #6a0dad; }
+    .cadastro { background: #7d3cff; }
+    .reset { background: #3a3a3a; }
+  </style>
+
+  <div class="login-box">
+    <h2>Área de Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
+
+    <button class="login" id="login">Entrar</button>
+    <button class="cadastro" id="cadastrar">Cadastrar</button>
+    <button class="reset" id="resetar">Esqueci a senha</button>
+  </div>
+
+  <script src="common.js"></script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKtAewnSAuDDf-nqsELGAV0iEkCNjYsxk",
+      authDomain: "englishplatform-a9e50.firebaseapp.com",
+      projectId: "englishplatform-a9e50",
+      storageBucket: "englishplatform-a9e50.firebasestorage.app",
+      messagingSenderId: "817476380559",
+      appId: "1:817476380559:web:84425a6a9fb81e26d84dfa"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("login").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const senha = document.getElementById("senha").value;
+
+      signInWithEmailAndPassword(auth, email, senha)
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+
+          await setDoc(doc(db, "alunos", user.uid), {
+            email: user.email,
+            ultimoLogin: new Date()
+          });
+
+          if(email === "daryanne4.ever@gmail.com"){
+            localStorage.setItem("english_lab_session", JSON.stringify({ role: "teacher" }));
+            window.location.href = "admin.html";
+          } else {
+            if (typeof setStudent === "function") {
+              setStudent(email, senha);
+            }
+            alert("Login realizado!");
+            window.location.href = "dashboard.html";
+          }
+        })
+        .catch(error => alert(error.message));
+    });
+
+    document.getElementById("cadastrar").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      createUserWithEmailAndPassword(auth, email, senha)
+        .then(() => alert("Conta criada com sucesso!"))
+        .catch(error => alert(error.message));
+    });
+
+    document.getElementById("resetar").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+
+      sendPasswordResetEmail(auth, email)
+        .then(() => alert("Email de redefinição enviado!"))
+        .catch(error => alert(error.message));
+    });
+  </script>
+</body>
+</html>
