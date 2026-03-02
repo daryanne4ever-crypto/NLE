@@ -4,76 +4,114 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | English Lab</title>
-  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="container" style="max-width:760px; padding-top:8vh;">
-    <section class="card">
-      <h1>English Lab - Login</h1>
-      <p class="muted">Use um único formulário para entrar como aluno(a) ou professora.</p>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #3a0b66 0%, #160522 45%, #000000 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #fff;
+    }
 
-      <div class="field">
-        <label for="role">Perfil</label>
-        <select id="role">
-          <option value="student">Aluno(a)</option>
-          <option value="teacher">Professora</option>
-        </select>
-      </div>
+    .login-box {
+      background: #111111;
+      border: 1px solid #6a0dad;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      width: 320px;
+      text-align: center;
+    }
 
-      <div class="field">
-        <label for="name">Usuário / Nome</label>
-        <input id="name" type="text" placeholder="Digite seu nome de login" autocomplete="off" />
-      </div>
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid #9b59ff;
+      background: #0b0b0b;
+      color: #fff;
+    }
 
-      <div class="field">
-        <label for="password">Senha</label>
-        <input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" />
-      </div>
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 700;
+    }
 
-      <button id="loginBtn" class="btn btn-primary" style="width:100%;">Entrar</button>
-      <button id="loginGithub" class="btn btn-secondary" style="width:100%; margin-top:10px;">Entrar com GitHub</button>
-      <p id="loginFeedback" class="feedback"></p>
+    .login { background: #6a0dad; }
+    .cadastro { background: #7d3cff; }
+    .reset { background: #3a3a3a; }
+  </style>
 
-    </section>
-  </main>
+  <div class="login-box">
+    <h2>Área de Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
 
-  <script src="common.js"></script>
-  <script src="index.js"></script>
+    <button class="login" id="login">Entrar</button>
+    <button class="cadastro" id="cadastrar">Cadastrar</button>
+    <button class="reset" id="resetar">Esqueci a senha</button>
+  </div>
 
-  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKtAewnSAuDDf-nqsELGAV0iEkCNjYsxk",
+      authDomain: "englishplatform-a9e50.firebaseapp.com",
+      projectId: "englishplatform-a9e50",
+      storageBucket: "englishplatform-a9e50.firebasestorage.app",
+      messagingSenderId: "817476380559",
+      appId: "1:817476380559:web:84425a6a9fb81e26d84dfa"
+    };
 
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="senha" placeholder="Senha">
-<button id="login">Entrar</button>
+    document.getElementById("login").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      signInWithEmailAndPassword(auth, email, senha)
+        .then(() => {
+          if (email === "daryanne4.ever@gmail.com") {
+            alert("Bem-vinda, Administradora!");
+          } else {
+            alert("Login realizado com sucesso!");
+          }
+          window.location.href = "dashboard.html";
+        })
+        .catch(error => alert(error.message));
+    });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBKtAewnSAuDDf-nqsELGAV0iEkCNjYsxk",
-  authDomain: "englishplatform-a9e50.firebaseapp.com",
-  projectId: "englishplatform-a9e50",
-  storageBucket: "englishplatform-a9e50.firebasestorage.app",
-  messagingSenderId: "817476380559",
-  appId: "1:817476380559:web:84425a6a9fb81e26d84dfa"
-};
+    document.getElementById("cadastrar").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+      createUserWithEmailAndPassword(auth, email, senha)
+        .then(() => alert("Conta criada com sucesso!"))
+        .catch(error => alert(error.message));
+    });
 
-document.getElementById("login").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
+    document.getElementById("resetar").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
 
-  signInWithEmailAndPassword(auth, email, senha)
-    .then(() => alert("Login feito!"))
-    .catch(error => alert(error.message));
-});
-</script>
-
+      sendPasswordResetEmail(auth, email)
+        .then(() => alert("Email de redefinição enviado!"))
+        .catch(error => alert(error.message));
+    });
+  </script>
 </body>
 </html>
