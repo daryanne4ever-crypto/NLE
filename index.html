@@ -1,1 +1,70 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Login | English Lab</title><link rel="stylesheet" href="styles.css" /></head><body><main class="container" style="max-width:760px; padding-top:8vh;"><section class="card"><h1>English Lab - Login</h1><p class="muted">Use um único formulário para entrar como aluno(a) ou professora.</p><div class="field"><label for="role">Perfil</label><select id="role"><option value="student">Aluno(a)</option><option value="teacher">Professora</option></select></div><div class="field"><label for="name">Usuário / Nome</label><input id="name" type="text" placeholder="Digite seu nome de login" autocomplete="off" /></div><div class="field"><label for="password">Senha</label><input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" /></div><button id="loginBtn" class="btn btn-primary" style="width:100%;">Entrar</button><button class="btn btn-secondary" style="width:100%; margin-top:10px;" onclick="loginComGithub()">Entrar com GitHub</button><p id="loginFeedback" class="feedback"></p></section></main><script src="common.js"></script><script src="index.js"></script><script type="module" src="firebase-github-auth.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | English Lab</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container" style="max-width:760px; padding-top:8vh;">
+    <section class="card">
+      <h1>English Lab - Login</h1>
+      <p class="muted">Use um único formulário para entrar como aluno(a) ou professora.</p>
+
+      <div class="field">
+        <label for="role">Perfil</label>
+        <select id="role">
+          <option value="student">Aluno(a)</option>
+          <option value="teacher">Professora</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="name">Usuário / Nome</label>
+        <input id="name" type="text" placeholder="Digite seu nome de login" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="password">Senha</label>
+        <input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" />
+      </div>
+
+      <button id="loginBtn" class="btn btn-primary" style="width:100%;">Entrar</button>
+      <button id="loginGithub" class="btn btn-secondary" style="width:100%; margin-top:10px;">Entrar com GitHub</button>
+      <p id="loginFeedback" class="feedback"></p>
+    </section>
+  </main>
+
+  <script src="common.js"></script>
+  <script src="index.js"></script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, GithubAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY",
+      authDomain: "englishplatform-a9e50.firebaseapp.com",
+      projectId: "englishplatform-a9e50",
+      appId: "SEU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GithubAuthProvider();
+
+    document.getElementById("loginGithub").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log("Logado:", result.user);
+          alert("Login realizado!");
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error.message);
+        });
+    });
+  </script>
+</body>
+</html>
