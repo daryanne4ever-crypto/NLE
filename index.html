@@ -64,7 +64,9 @@
     <button class="reset" id="resetar">Esqueci a senha</button>
   </div>
 
-  <script type="module">
+  <script src="common.js"></script>
+
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
@@ -81,16 +83,22 @@
     const auth = getAuth(app);
 
     document.getElementById("login").addEventListener("click", () => {
-      const email = document.getElementById("email").value;
+      const email = document.getElementById("email").value.trim();
       const senha = document.getElementById("senha").value;
 
       signInWithEmailAndPassword(auth, email, senha)
         .then(() => {
-          if (email === "daryanne4.ever@gmail.com") {
+          if (email.toLowerCase() === "daryanne4.ever@gmail.com") {
+            localStorage.setItem("english_lab_session", JSON.stringify({ role: "teacher" }));
             alert("Bem-vinda, Administradora!");
-          } else {
-            alert("Login realizado com sucesso!");
+            window.location.href = "performance.html";
+            return;
           }
+
+          if (typeof setStudent === "function") {
+            setStudent(email, senha);
+          }
+          alert("Login realizado com sucesso!");
           window.location.href = "dashboard.html";
         })
         .catch(error => alert(error.message));
