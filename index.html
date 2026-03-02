@@ -69,6 +69,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBKtAewnSAuDDf-nqsELGAV0iEkCNjYsxk",
@@ -81,24 +82,31 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     document.getElementById("login").addEventListener("click", () => {
       const email = document.getElementById("email").value.trim();
       const senha = document.getElementById("senha").value;
 
       signInWithEmailAndPassword(auth, email, senha)
-        .then(() => {
-          if (email.toLowerCase() === "daryanne4.ever@gmail.com") {
-            localStorage.setItem("english_lab_session", JSON.stringify({ role: "teacher" }));
-            alert("Bem-vinda, Administradora!");
-            window.location.href = "admin.html";
-            return;
-          }
+        .then(async (userCredential) => {
+          const user = userCredential.user;
 
-          if (typeof setStudent === "function") {
-            setStudent(email, senha);
+          await setDoc(doc(db, "alunos", user.uid), {
+            email: user.email,
+            ultimoLogin: new Date()
+          });
+
+          if(email === "daryanne4.ever@gmail.com"){
+            localStorage.setItem("english_lab_session", JSON.stringify({ role: "teacher" }));
+            window.location.href = "admin.html";
+          } else {
+            if (typeof setStudent === "function") {
+              setStudent(email, senha);
+            }
+            alert("Login realizado!");
+            window.location.href = "dashboard.html";
           }
-          window.location.href = "dashboard.html";
         })
         .catch(error => alert(error.message));
     });
