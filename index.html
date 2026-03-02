@@ -33,38 +33,54 @@
       <button id="loginBtn" class="btn btn-primary" style="width:100%;">Entrar</button>
       <button id="loginGithub" class="btn btn-secondary" style="width:100%; margin-top:10px;">Entrar com GitHub</button>
       <p id="loginFeedback" class="feedback"></p>
+      <h2>Login</h2>
+
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="senha" placeholder="Senha">
+
+      <button id="cadastrar">Cadastrar</button>
+      <button id="login">Entrar</button>
+
     </section>
   </main>
 
   <script src="common.js"></script>
   <script src="index.js"></script>
 
+  
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, GithubAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "SUA_API_KEY",
-      authDomain: "englishplatform-a9e50.firebaseapp.com",
-      projectId: "englishplatform-a9e50",
-      appId: "SEU_APP_ID"
-    };
+  const firebaseConfig = {
+    apiKey: "COLE_AQUI_SUA_API_KEY_REAL",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO_ID",
+    appId: "SEU_APP_ID"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GithubAuthProvider();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-    document.getElementById("loginGithub").addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          console.log("Logado:", result.user);
-          alert("Login realizado!");
-        })
-        .catch((error) => {
-          console.error(error);
-          alert(error.message);
-        });
-    });
+  document.getElementById("cadastrar").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then(() => alert("Usuário criado!"))
+      .catch(error => alert(error.message));
+  });
+
+  document.getElementById("login").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    signInWithEmailAndPassword(auth, email, senha)
+      .then(() => alert("Login feito!"))
+      .catch(error => alert(error.message));
+  });
   </script>
+
 </body>
 </html>
