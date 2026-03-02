@@ -91,14 +91,13 @@
           if (email.toLowerCase() === "daryanne4.ever@gmail.com") {
             localStorage.setItem("english_lab_session", JSON.stringify({ role: "teacher" }));
             alert("Bem-vinda, Administradora!");
-            window.location.href = "performance.html";
+            window.location.href = "admin.html";
             return;
           }
 
           if (typeof setStudent === "function") {
             setStudent(email, senha);
           }
-          alert("Login realizado com sucesso!");
           window.location.href = "dashboard.html";
         })
         .catch(error => alert(error.message));
