@@ -33,13 +33,6 @@
       <button id="loginBtn" class="btn btn-primary" style="width:100%;">Entrar</button>
       <button id="loginGithub" class="btn btn-secondary" style="width:100%; margin-top:10px;">Entrar com GitHub</button>
       <p id="loginFeedback" class="feedback"></p>
-      <h2>Login</h2>
-
-      <input type="email" id="email" placeholder="Email">
-      <input type="password" id="senha" placeholder="Senha">
-
-      <button id="cadastrar">Cadastrar</button>
-      <button id="login">Entrar</button>
 
     </section>
   </main>
@@ -49,38 +42,38 @@
 
   
 
-  <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  
 
-  const firebaseConfig = {
-    apiKey: "COLE_AQUI_SUA_API_KEY_REAL",
-    authDomain: "SEU_PROJETO.firebaseapp.com",
-    projectId: "SEU_PROJETO_ID",
-    appId: "SEU_APP_ID"
-  };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="senha" placeholder="Senha">
+<button id="login">Entrar</button>
 
-  document.getElementById("cadastrar").addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    createUserWithEmailAndPassword(auth, email, senha)
-      .then(() => alert("Usuário criado!"))
-      .catch(error => alert(error.message));
-  });
+const firebaseConfig = {
+  apiKey: "AIzaSyBKtAewnSAuDDf-nqsELGAV0iEkCNjYsxk",
+  authDomain: "englishplatform-a9e50.firebaseapp.com",
+  projectId: "englishplatform-a9e50",
+  storageBucket: "englishplatform-a9e50.firebasestorage.app",
+  messagingSenderId: "817476380559",
+  appId: "1:817476380559:web:84425a6a9fb81e26d84dfa"
+};
 
-  document.getElementById("login").addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-    signInWithEmailAndPassword(auth, email, senha)
-      .then(() => alert("Login feito!"))
-      .catch(error => alert(error.message));
-  });
-  </script>
+document.getElementById("login").addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("senha").value;
+
+  signInWithEmailAndPassword(auth, email, senha)
+    .then(() => alert("Login feito!"))
+    .catch(error => alert(error.message));
+});
+</script>
 
 </body>
 </html>
